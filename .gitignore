@@ -1,1 +1,29 @@
+# Python bytecode and caches
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Environment files
 .env
+.env.*
+
+# Flask instance and database files
+backend/instance/
+*.db
+*.sqlite3
+
+# IDE and editor files
+.vscode/
+.idea/
+
+# Node / frontend build artifacts
+node_modules/
+dist/
+build/
+
