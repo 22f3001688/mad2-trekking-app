@@ -1,10 +1,18 @@
 import os
+import sys
+from pathlib import Path
 
 from flask import Flask
 
-from .config import Config
-from .extensions import db, init_extensions
-from .routes import register_blueprints
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+    from backend.config import Config
+    from backend.extensions import db, init_extensions
+    from backend.routes import register_blueprints
+else:
+    from .config import Config
+    from .extensions import db, init_extensions
+    from .routes import register_blueprints
 
 
 def create_app(config_class=None):
@@ -27,7 +35,10 @@ def create_app(config_class=None):
     register_blueprints(app)
 
     with app.app_context():
-        from . import models  # Import all models so SQLAlchemy registers them
+        if __package__ in (None, ""):
+            import backend.models as models  # Import all models so SQLAlchemy registers them
+        else:
+            from . import models  # Import all models so SQLAlchemy registers them
 
         db.create_all()
 

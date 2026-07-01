@@ -1,17 +1,16 @@
 import os
+import sys
+from pathlib import Path
 
 from werkzeug.security import generate_password_hash
 
-try:
-    from backend.app import create_app
-    from backend.extensions import db
-    from backend.models.user import User
-    from backend.utils.constants import Roles
-except ImportError:  
-    from app import create_app
-    from extensions import db
-    from models.user import User
-    from utils.constants import Roles
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
+from backend.app import create_app
+from backend.extensions import db
+from backend.models.user import User
+from backend.utils.constants import Roles
 
 
 def main():

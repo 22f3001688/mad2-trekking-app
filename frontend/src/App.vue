@@ -1,6 +1,9 @@
 <template>
-  <div class="container py-4">
-    <h1>TrekScape</h1>
-    <p>Frontend scaffold ready.</p>
-  </div>
+  <router-view />
 </template>
+
+<script>
+export default {
+  name: 'App',
+}
+</script>
