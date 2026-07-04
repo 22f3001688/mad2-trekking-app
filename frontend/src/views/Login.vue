@@ -71,6 +71,7 @@
 
 <script>
 import authService from '../services/auth.js'
+import { getDashboardRouteForRole } from '../router'
 
 export default {
   name: 'Login',
@@ -104,14 +105,7 @@ export default {
       try {
         const response = await authService.login(this.form)
         if (response.data.success) {
-          const role = response.data.user?.role
-          if (role === 'admin') {
-            this.$router.push('/admin/dashboard')
-          } else if (role === 'staff') {
-            this.$router.push('/staff/dashboard')
-          } else {
-            this.$router.push('/dashboard')
-          }
+          this.$router.push(getDashboardRouteForRole(response.data.user?.role))
         }
       } catch (error) {
         const data = error.response?.data
