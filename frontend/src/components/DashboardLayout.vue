@@ -58,9 +58,9 @@ export default {
   data() {
     return {
       navItems: [
-        { label: 'Dashboard', routeName: 'AdminDashboard', icon: 'bi bi-speedometer2' },
-        { label: 'Treks', routeName: 'AdminTrekIndex', icon: 'bi bi-map' },
-        { label: 'Staff', routeName: 'AdminStaffManagement', icon: 'bi bi-people' },
+        { label: 'Dashboard', routeName: this.$route.meta?.role === 'staff' ? 'StaffDashboard' : 'AdminDashboard', icon: 'bi bi-speedometer2' },
+        { label: 'Treks', routeName: this.$route.meta?.role === 'staff' ? null : 'AdminTrekIndex', icon: 'bi bi-map' },
+        { label: 'Staff', routeName: this.$route.meta?.role === 'staff' ? null : 'AdminStaffManagement', icon: 'bi bi-people' },
         { label: 'Users', icon: 'bi bi-person-lines-fill', disabled: true },
         { label: 'Bookings', icon: 'bi bi-calendar2-check', disabled: true },
         { label: 'Reports', icon: 'bi bi-bar-chart', disabled: true },

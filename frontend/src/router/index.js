@@ -4,6 +4,8 @@ import Login from '../views/Login.vue'
 import Register from '../views/Register.vue'
 import Dashboard from '../views/Dashboard.vue'
 import StaffDashboard from '../views/StaffDashboard.vue'
+import StaffMyTreks from '../views/StaffMyTreks.vue'
+import StaffTrekParticipants from '../views/StaffTrekParticipants.vue'
 import AdminDashboard from '../views/AdminDashboard.vue'
 import AdminStaffManagement from '../views/AdminStaffManagement.vue'
 import AdminTrekCreate from '../views/AdminTrekCreate.vue'
@@ -27,6 +29,8 @@ const routes = [
   { path: '/register', name: 'Register', component: Register, meta: { guest: true } },
   { path: '/dashboard', name: 'Dashboard', component: Dashboard, meta: { requiresAuth: true } },
   { path: '/staff/dashboard', name: 'StaffDashboard', component: StaffDashboard, meta: { requiresAuth: true, role: 'staff' } },
+  { path: '/staff/my-treks', name: 'StaffMyTreks', component: StaffMyTreks, meta: { requiresAuth: true, role: 'staff' } },
+  { path: '/staff/treks/:id/participants', name: 'StaffTrekParticipants', component: StaffTrekParticipants, meta: { requiresAuth: true, role: 'staff' } },
   { path: '/admin/dashboard', name: 'AdminDashboard', component: AdminDashboard, meta: { requiresAuth: true, role: 'admin' } },
   { path: '/admin/treks', name: 'AdminTrekIndex', component: AdminTrekList, meta: { requiresAuth: true, role: 'admin' } },
   { path: '/admin/treks/new', name: 'AdminTrekCreate', component: AdminTrekCreate, meta: { requiresAuth: true, role: 'admin' } },
