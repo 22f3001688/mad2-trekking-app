@@ -3,6 +3,11 @@ import Home from '../views/Home.vue'
 import Login from '../views/Login.vue'
 import Register from '../views/Register.vue'
 import Dashboard from '../views/Dashboard.vue'
+import TrekkerBrowseTreks from '../views/TrekkerBrowseTreks.vue'
+import TrekkerMyBookings from '../views/TrekkerMyBookings.vue'
+import BookingDetails from '../views/BookingDetails.vue'
+import TrekHistory from '../views/TrekHistory.vue'
+import Profile from '../views/Profile.vue'
 import StaffDashboard from '../views/StaffDashboard.vue'
 import StaffMyTreks from '../views/StaffMyTreks.vue'
 import StaffTrekParticipants from '../views/StaffTrekParticipants.vue'
@@ -28,6 +33,11 @@ const routes = [
   { path: '/login', name: 'Login', component: Login, meta: { guest: true } },
   { path: '/register', name: 'Register', component: Register, meta: { guest: true } },
   { path: '/dashboard', name: 'Dashboard', component: Dashboard, meta: { requiresAuth: true } },
+  { path: '/trekker/treks', name: 'TrekkerBrowseTreks', component: TrekkerBrowseTreks, meta: { requiresAuth: true, role: 'trekker' } },
+  { path: '/trekker/bookings', name: 'TrekkerMyBookings', component: TrekkerMyBookings, meta: { requiresAuth: true, role: 'trekker' } },
+  { path: '/trekker/bookings/:bookingId', name: 'BookingDetails', component: BookingDetails, meta: { requiresAuth: true, role: 'trekker' } },
+  { path: '/trekker/history', name: 'TrekHistory', component: TrekHistory, meta: { requiresAuth: true, role: 'trekker' } },
+  { path: '/trekker/profile', name: 'Profile', component: Profile, meta: { requiresAuth: true, role: 'trekker' } },
   { path: '/staff/dashboard', name: 'StaffDashboard', component: StaffDashboard, meta: { requiresAuth: true, role: 'staff' } },
   { path: '/staff/my-treks', name: 'StaffMyTreks', component: StaffMyTreks, meta: { requiresAuth: true, role: 'staff' } },
   { path: '/staff/treks/:id/participants', name: 'StaffTrekParticipants', component: StaffTrekParticipants, meta: { requiresAuth: true, role: 'staff' } },

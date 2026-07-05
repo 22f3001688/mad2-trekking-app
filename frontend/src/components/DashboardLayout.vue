@@ -56,16 +56,36 @@ import authService from '../services/auth.js'
 export default {
   name: 'DashboardLayout',
   data() {
+    const currentUser = authService.getCurrentUser() || {}
+    const role = currentUser.role
+
     return {
-      navItems: [
-        { label: 'Dashboard', routeName: this.$route.meta?.role === 'staff' ? 'StaffDashboard' : 'AdminDashboard', icon: 'bi bi-speedometer2' },
-        { label: 'Treks', routeName: this.$route.meta?.role === 'staff' ? null : 'AdminTrekIndex', icon: 'bi bi-map' },
-        { label: 'Staff', routeName: this.$route.meta?.role === 'staff' ? null : 'AdminStaffManagement', icon: 'bi bi-people' },
-        { label: 'Users', icon: 'bi bi-person-lines-fill', disabled: true },
-        { label: 'Bookings', icon: 'bi bi-calendar2-check', disabled: true },
-        { label: 'Reports', icon: 'bi bi-bar-chart', disabled: true },
-        { label: 'Logout', action: 'logout', icon: 'bi bi-box-arrow-right', variant: 'danger' },
-      ],
+      navItems:
+        role === 'staff'
+          ? [
+              { label: 'Dashboard', routeName: 'StaffDashboard', icon: 'bi bi-speedometer2' },
+              { label: 'Assigned Treks', routeName: 'StaffMyTreks', icon: 'bi bi-map' },
+              { label: 'Participants', routeName: 'StaffTrekParticipants', icon: 'bi bi-people', disabled: true },
+              { label: 'Logout', action: 'logout', icon: 'bi bi-box-arrow-right', variant: 'danger' },
+            ]
+          : role === 'trekker'
+            ? [
+                { label: 'Dashboard', routeName: 'Dashboard', icon: 'bi bi-speedometer2' },
+                { label: 'Browse Treks', routeName: 'TrekkerBrowseTreks', icon: 'bi bi-map' },
+                { label: 'My Bookings', routeName: 'TrekkerMyBookings', icon: 'bi bi-calendar2-check' },
+                { label: 'History', routeName: 'TrekHistory', icon: 'bi bi-clock-history' },
+                { label: 'Profile', routeName: 'Profile', icon: 'bi bi-person' },
+                { label: 'Logout', action: 'logout', icon: 'bi bi-box-arrow-right', variant: 'danger' },
+              ]
+            : [
+                { label: 'Dashboard', routeName: 'AdminDashboard', icon: 'bi bi-speedometer2' },
+                { label: 'Treks', routeName: 'AdminTrekIndex', icon: 'bi bi-map' },
+                { label: 'Staff', routeName: 'AdminStaffManagement', icon: 'bi bi-people' },
+                { label: 'Users', icon: 'bi bi-person-lines-fill', disabled: true },
+                { label: 'Bookings', icon: 'bi bi-calendar2-check', disabled: true },
+                { label: 'Reports', icon: 'bi bi-bar-chart', disabled: true },
+                { label: 'Logout', action: 'logout', icon: 'bi bi-box-arrow-right', variant: 'danger' },
+              ],
     }
   },
   methods: {
