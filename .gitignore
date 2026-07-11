@@ -12,9 +12,11 @@ env/
 # Environment files
 .env
 .env.*
+!backend/.env.example
 
 # Flask instance and database files
 backend/instance/
+backend/exports/
 *.db
 *.sqlite3
 

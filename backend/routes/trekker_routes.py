@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, send_from_directory
 from flask_jwt_extended import get_jwt_identity
 
 from ..controllers.trekker_controller import TrekkerController
@@ -63,6 +63,36 @@ def history():
     trekker_user_id = int(get_jwt_identity())
     response, status_code = trekker_controller.get_history(trekker_user_id)
     return jsonify(response), status_code
+
+
+@trekker_bp.route("/history/export", methods=["POST"])
+@trekker_required
+def export_history():
+    trekker_user_id = int(get_jwt_identity())
+    response, status_code = trekker_controller.start_history_export(trekker_user_id)
+    return jsonify(response), status_code
+
+
+@trekker_bp.route("/history/export/<string:task_id>/status", methods=["GET"])
+@trekker_required
+def export_history_status(task_id):
+    trekker_user_id = int(get_jwt_identity())
+    response, status_code = trekker_controller.get_history_export_status(trekker_user_id, task_id)
+    return jsonify(response), status_code
+
+
+@trekker_bp.route("/history/export/<string:task_id>/download", methods=["GET"])
+@trekker_required
+def download_history_export(task_id):
+    trekker_user_id = int(get_jwt_identity())
+    response, status_code = trekker_controller.get_history_export_download(trekker_user_id, task_id)
+
+    if status_code != 200:
+        return jsonify(response), status_code
+
+    export_directory = response["directory"]
+    filename = response["filename"]
+    return send_from_directory(export_directory, filename, as_attachment=True, download_name=filename)
 
 
 @trekker_bp.route("/profile", methods=["GET", "PUT"])

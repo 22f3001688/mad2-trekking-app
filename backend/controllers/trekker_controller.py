@@ -1,9 +1,11 @@
 from ..services.trekker_service import TrekkerService
+from ..services.booking_history_export_service import BookingHistoryExportService
 
 
 class TrekkerController:
     def __init__(self):
         self.trekker_service = TrekkerService()
+        self.booking_history_export_service = BookingHistoryExportService()
 
     def get_dashboard(self, trekker_user_id):
         return self.trekker_service.get_dashboard(trekker_user_id)
@@ -31,3 +33,12 @@ class TrekkerController:
 
     def update_profile(self, trekker_user_id, data):
         return self.trekker_service.update_profile(trekker_user_id, data)
+
+    def start_history_export(self, trekker_user_id):
+        return self.booking_history_export_service.start_export(trekker_user_id)
+
+    def get_history_export_status(self, trekker_user_id, task_id):
+        return self.booking_history_export_service.get_export_status(trekker_user_id, task_id)
+
+    def get_history_export_download(self, trekker_user_id, task_id):
+        return self.booking_history_export_service.get_export_download(trekker_user_id, task_id)

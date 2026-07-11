@@ -6,10 +6,12 @@ from flask import Flask
 
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+    from backend.celery_app import init_celery
     from backend.config import Config
     from backend.extensions import db, init_extensions
     from backend.routes import register_blueprints
 else:
+    from .celery_app import init_celery
     from .config import Config
     from .extensions import db, init_extensions
     from .routes import register_blueprints
@@ -32,6 +34,7 @@ def create_app(config_class=None):
             os.makedirs(database_dir, exist_ok=True)
 
     init_extensions(app)
+    init_celery(app)
     register_blueprints(app)
 
     with app.app_context():

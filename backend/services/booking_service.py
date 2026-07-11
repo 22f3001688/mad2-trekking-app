@@ -290,3 +290,39 @@ class BookingService:
             )
 
         return {"success": True, "data": serialized_history}, 200
+
+    def get_history_export_rows(self, trekker_user_id):
+        user = User.query.filter_by(id=trekker_user_id, role=Roles.TREKKER).first()
+        if user is None:
+            return {"success": False, "message": "Trekker not found"}, 404
+
+        bookings = (
+            Booking.query.options(joinedload(Booking.trek).joinedload(Trek.assigned_staff))
+            .join(Trek)
+            .filter(
+                Booking.user_id == user.id,
+                Booking.status.in_([BookingStatus.COMPLETED, BookingStatus.CANCELLED]),
+            )
+            .order_by(Booking.booking_date.desc(), Booking.id.desc())
+            .all()
+        )
+
+        export_rows = []
+        for booking in bookings:
+            trek = booking.trek
+            if trek is None:
+                continue
+
+            export_rows.append(
+                {
+                    "user_id": user.id,
+                    "trek_name": trek.trek_name,
+                    "location": trek.location,
+                    "booking_status": booking.status,
+                    "booking_date": booking.booking_date.isoformat() if booking.booking_date else None,
+                    "start_date": trek.start_date.isoformat(),
+                    "end_date": trek.end_date.isoformat(),
+                }
+            )
+
+        return {"success": True, "data": export_rows}, 200

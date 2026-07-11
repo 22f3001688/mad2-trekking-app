@@ -9,34 +9,18 @@ Minimal MVC scaffold for the Trekking Management Application.
 
 ## Getting Started
 
-### 1. Backend setup
+Terminal 1 — Ubuntu / WSL
+wsl -d Ubuntu
+sudo service redis-server start
+redis-cli ping
 
-```bash
-cd backend
-python -m venv .venv
-source .venv/bin/activate   # macOS/Linux
-.\.venv\Scripts\activate    # Windows PowerShell
-pip install -r requirements.txt
-export FLASK_APP=app.py
-export FLASK_ENV=development
-python app.py
-```
+Terminal 2 — Windows PowerShell
+celery -A backend.celery_worker:celery worker --pool=solo --loglevel=info
 
-The backend should start on http://localhost:5000.
+Terminal 3 — Windows PowerShell
+python -m backend.app
 
-### 2. Frontend setup
-
-```bash
+Terminal 4 — Windows PowerShell
 cd frontend
-npm install
 npm run dev
-```
 
-The frontend should start on http://localhost:5173.
-
-
-## Notes
-
-- The backend authentication APIs are already wired for registration and login.
-- The frontend uses JWT-based authentication with protected routes.
-- No dashboard implementation is required for this verification step; placeholder protected pages are enough.
