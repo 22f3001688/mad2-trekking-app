@@ -9,6 +9,7 @@ from ..models.booking import Booking
 from ..models.trek import Trek
 from ..models.user import User
 from ..utils.constants import BookingStatus, PaymentStatus, Roles, TrekStatus
+from .cache_service import invalidate_trek_browse_cache
 
 
 class BookingService:
@@ -86,6 +87,7 @@ class BookingService:
             db.session.flush()
             serialized_booking = self._serialize_booking(booking)
             db.session.commit()
+            invalidate_trek_browse_cache()
 
             return {
                 "success": True,
@@ -239,6 +241,7 @@ class BookingService:
             trek.available_slots += 1
 
             db.session.commit()
+            invalidate_trek_browse_cache()
 
             return {
                 "success": True,

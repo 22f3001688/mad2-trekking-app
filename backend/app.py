@@ -23,6 +23,12 @@ def create_app(config_class=None):
 
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_object(config_class)
+    app.config.setdefault("REDIS_URL", "redis://localhost:6379/0")
+    app.config.setdefault("CELERY_BROKER_URL", app.config["REDIS_URL"])
+    app.config.setdefault("CELERY_RESULT_BACKEND", app.config["REDIS_URL"])
+    app.config.setdefault("CELERY_TIMEZONE", "Asia/Kolkata")
+    app.config.setdefault("CACHE_REDIS_URL", "redis://localhost:6379/2")
+    app.config.setdefault("TREK_CACHE_TTL", 300)
 
     os.makedirs(app.instance_path, exist_ok=True)
     app.config.setdefault("INSTANCE_FOLDER_PATH", app.instance_path)

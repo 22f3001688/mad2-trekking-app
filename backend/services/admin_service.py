@@ -8,6 +8,7 @@ from ..models.trek import Trek
 from ..models.user import User
 from ..utils.constants import BookingStatus, Roles, TrekStatus
 from ..utils.security import hash_password
+from .cache_service import invalidate_trek_browse_cache
 
 
 class AdminService:
@@ -103,6 +104,7 @@ class AdminService:
         )
         db.session.add(profile)
         db.session.commit()
+        invalidate_trek_browse_cache()
 
         return {"success": True, "message": "Staff created successfully", "data": self._serialize_staff(user)}, 201
 
@@ -151,6 +153,7 @@ class AdminService:
             profile.status = profile_status
 
         db.session.commit()
+        invalidate_trek_browse_cache()
         return {"success": True, "message": "Staff updated successfully", "data": self._serialize_staff(user)}, 200
 
     def delete_staff(self, staff_id):
@@ -160,6 +163,7 @@ class AdminService:
 
         user.is_active = False
         db.session.commit()
+        invalidate_trek_browse_cache()
         return {"success": True, "message": "Staff deactivated successfully", "data": self._serialize_staff(user)}, 200
 
     def get_all_treks(self, filters=None):
@@ -284,6 +288,7 @@ class AdminService:
             trek.available_slots = max(0, trek.available_slots + difference)
 
         db.session.commit()
+        invalidate_trek_browse_cache()
 
         return {
             "success": True,
@@ -330,6 +335,7 @@ class AdminService:
 
         trek.assigned_staff_id = staff_user.id
         db.session.commit()
+        invalidate_trek_browse_cache()
 
         return {
             "success": True,
@@ -396,6 +402,7 @@ class AdminService:
 
         db.session.add(trek)
         db.session.commit()
+        invalidate_trek_browse_cache()
 
         return {
             "success": True,

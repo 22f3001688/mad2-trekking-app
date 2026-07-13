@@ -8,6 +8,7 @@ from ..models.trek import Trek
 from ..models.user import User
 from ..utils.constants import BookingStatus, Roles, TrekStatus
 from .booking_service import BookingService
+from .cache_service import build_trek_browse_cache_key, cache_service, normalize_trek_browse_filters
 
 
 class TrekkerService:
@@ -86,6 +87,23 @@ class TrekkerService:
         today = date.today()
         filters = filters or {}
 
+        try:
+            normalized_filters = normalize_trek_browse_filters(filters)
+        except (TypeError, ValueError):
+            return {"success": False, "message": "Duration must be an integer"}, 400
+
+        cache_key = build_trek_browse_cache_key(trekker_user_id, normalized_filters, today.isoformat())
+        cached_response = cache_service.get_json(cache_key)
+        if cached_response is not None:
+            from flask import current_app
+
+            current_app.logger.info("Trek browse cache HIT key=%s", cache_key)
+            return cached_response, 200
+
+        from flask import current_app
+
+        current_app.logger.info("Trek browse cache MISS key=%s", cache_key)
+
         booked_trek_ids = set()
         if trekker_user_id is not None:
             booked_trek_ids = {
@@ -102,11 +120,11 @@ class TrekkerService:
             Trek.start_date >= today,
         )
 
-        search_term = (filters.get("q") or "").strip()
-        difficulty = (filters.get("difficulty") or "").strip()
-        location = (filters.get("location") or "").strip()
-        duration = (filters.get("duration") or "").strip()
-        sort_option = (filters.get("sort") or "start_asc").strip()
+        search_term = normalized_filters.get("q") or ""
+        difficulty = normalized_filters.get("difficulty") or ""
+        location = normalized_filters.get("location") or ""
+        duration = normalized_filters.get("duration") or ""
+        sort_option = normalized_filters.get("sort") or "start_asc"
 
         if search_term:
             query = query.filter(
@@ -156,7 +174,11 @@ class TrekkerService:
                 }
             )
 
-        return {"success": True, "data": serialized_treks}, 200
+        response_payload = {"success": True, "data": serialized_treks}
+        if cache_service.set_json(cache_key, response_payload):
+            current_app.logger.info("Trek browse cache SET key=%s", cache_key)
+
+        return response_payload, 200
 
     def book_trek(self, trekker_user_id, data):
         return self.booking_service.book_trek(trekker_user_id, data)

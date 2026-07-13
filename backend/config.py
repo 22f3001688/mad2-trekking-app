@@ -39,6 +39,8 @@ class Config:
     CELERY_BROKER_URL = os.getenv("CELERY_BROKER_URL", REDIS_URL)
     CELERY_RESULT_BACKEND = os.getenv("CELERY_RESULT_BACKEND", REDIS_URL)
     CELERY_TIMEZONE = os.getenv("CELERY_TIMEZONE", "Asia/Kolkata")
+    CACHE_REDIS_URL = os.getenv("CACHE_REDIS_URL", "redis://localhost:6379/2")
+    TREK_CACHE_TTL = int(os.getenv("TREK_CACHE_TTL", "300"))
 
     MAIL_SERVER = os.getenv("MAIL_SERVER", "localhost")
     MAIL_PORT = int(os.getenv("MAIL_PORT", "1025"))

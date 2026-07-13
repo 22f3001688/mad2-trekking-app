@@ -3,6 +3,7 @@ from ..models.booking import Booking
 from ..models.trek import Trek
 from ..models.user import User
 from ..utils.constants import Roles, TrekStatus
+from .cache_service import invalidate_trek_browse_cache
 from sqlalchemy.orm import joinedload
 
 
@@ -126,6 +127,7 @@ class StaffService:
 
         trek.status = new_status
         db.session.commit()
+        invalidate_trek_browse_cache()
 
         registered_participants = Booking.query.filter_by(trek_id=trek.id).count()
         return {
@@ -151,6 +153,7 @@ class StaffService:
 
         trek.status = TrekStatus.COMPLETED
         db.session.commit()
+        invalidate_trek_browse_cache()
 
         registered_participants = Booking.query.filter_by(trek_id=trek.id).count()
         return {
@@ -194,6 +197,7 @@ class StaffService:
 
         trek.available_slots = available_slots
         db.session.commit()
+        invalidate_trek_browse_cache()
 
         return {
             "success": True,
