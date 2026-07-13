@@ -12,6 +12,10 @@
             <i class="bi bi-shield-lock me-1"></i>
             Admin
           </span>
+          <router-link class="btn btn-outline-primary btn-sm" :to="{ name: 'AdminBookingHistory' }">
+            <i class="bi bi-clock-history me-1"></i>
+            Booking History
+          </router-link>
           <router-link class="btn btn-outline-primary btn-sm" :to="{ name: 'AdminStaffManagement' }">
             <i class="bi bi-people me-1"></i>
             Manage Staff

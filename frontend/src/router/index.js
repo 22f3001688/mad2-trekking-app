@@ -16,6 +16,7 @@ import AdminStaffManagement from '../views/AdminStaffManagement.vue'
 import AdminTrekCreate from '../views/AdminTrekCreate.vue'
 import AdminTrekEdit from '../views/AdminTrekEdit.vue'
 import AdminTrekList from '../views/AdminTrekList.vue'
+import AdminBookingHistory from '../views/AdminBookingHistory.vue'
 import authService from '../services/auth.js'
 
 export function getDashboardRouteForRole(role) {
@@ -43,6 +44,7 @@ const routes = [
   { path: '/staff/treks/:id/participants', name: 'StaffTrekParticipants', component: StaffTrekParticipants, meta: { requiresAuth: true, role: 'staff' } },
   { path: '/admin/dashboard', name: 'AdminDashboard', component: AdminDashboard, meta: { requiresAuth: true, role: 'admin' } },
   { path: '/admin/treks', name: 'AdminTrekIndex', component: AdminTrekList, meta: { requiresAuth: true, role: 'admin' } },
+  { path: '/admin/bookings/history', name: 'AdminBookingHistory', component: AdminBookingHistory, meta: { requiresAuth: true, role: 'admin' } },
   { path: '/admin/treks/new', name: 'AdminTrekCreate', component: AdminTrekCreate, meta: { requiresAuth: true, role: 'admin' } },
   { path: '/admin/treks/:id/edit', name: 'AdminTrekEdit', component: AdminTrekEdit, meta: { requiresAuth: true, role: 'admin' } },
   { path: '/admin/treks/view', name: 'AdminTrekView', component: AdminTrekList, meta: { requiresAuth: true, role: 'admin' } },

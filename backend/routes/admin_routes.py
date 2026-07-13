@@ -41,6 +41,17 @@ def get_treks():
     return jsonify(response), 200
 
 
+@admin_bp.route("/bookings/history", methods=["GET"])
+@admin_required
+def get_booking_history():
+    filters = {
+        "search": request.args.get("search", ""),
+        "status": request.args.get("status", "historical"),
+    }
+    response, status_code = admin_controller.get_booking_history(filters)
+    return jsonify(response), status_code
+
+
 @admin_bp.route("/treks/<int:trek_id>", methods=["GET"])
 @admin_required
 def get_trek(trek_id):

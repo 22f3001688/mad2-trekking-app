@@ -23,6 +23,9 @@ class AdminController:
     def get_treks(self, filters=None):
         return self.admin_service.get_all_treks(filters)
 
+    def get_booking_history(self, filters=None):
+        return self.admin_service.get_booking_history(filters)
+
     def get_trek(self, trek_id):
         return self.admin_service.get_trek_by_id(trek_id)
 

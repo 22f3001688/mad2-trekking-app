@@ -1,6 +1,8 @@
 import re
 from datetime import datetime
 
+from sqlalchemy.orm import joinedload
+
 from ..extensions import db
 from ..models.booking import Booking
 from ..models.staff_profile import StaffProfile
@@ -209,6 +211,64 @@ class AdminService:
             )
 
         return {"success": True, "data": serialized_treks}
+
+    def get_booking_history(self, filters=None):
+        filters = filters or {}
+        search_term = (filters.get("search") or "").strip().lower()
+        status_filter = (filters.get("status") or "historical").strip().lower()
+
+        query = Booking.query.options(
+            joinedload(Booking.user),
+            joinedload(Booking.trek).joinedload(Trek.assigned_staff),
+        ).join(Trek)
+
+        if status_filter in {"completed", "cancelled", "booked"}:
+            query = query.filter(Booking.status == status_filter)
+        else:
+            query = query.filter(Booking.status.in_([BookingStatus.COMPLETED, BookingStatus.CANCELLED]))
+
+        if search_term:
+            query = query.join(User).filter(
+                (User.full_name.ilike(f"%{search_term}%"))
+                | (User.email.ilike(f"%{search_term}%"))
+                | (Trek.trek_name.ilike(f"%{search_term}%"))
+                | (Trek.location.ilike(f"%{search_term}%"))
+            )
+
+        bookings = query.order_by(Booking.booking_date.desc(), Booking.id.desc()).all()
+
+        serialized_history = []
+        for booking in bookings:
+            trek = booking.trek
+            user = booking.user
+            serialized_history.append(
+                {
+                    "booking_id": booking.id,
+                    "booking_date": booking.booking_date.isoformat() if booking.booking_date else None,
+                    "booking_status": booking.status,
+                    "payment_status": booking.payment_status,
+                    "completed_date": booking.completed_date.isoformat() if booking.completed_date else None,
+                    "user": {
+                        "id": user.id if user else None,
+                        "full_name": user.full_name if user else None,
+                        "email": user.email if user else None,
+                        "role": user.role if user else None,
+                    },
+                    "trek": {
+                        "id": trek.id if trek else None,
+                        "trek_name": trek.trek_name if trek else None,
+                        "location": trek.location if trek else None,
+                        "difficulty": trek.difficulty if trek else None,
+                        "duration_days": trek.duration_days if trek else None,
+                        "start_date": trek.start_date.isoformat() if trek and trek.start_date else None,
+                        "end_date": trek.end_date.isoformat() if trek and trek.end_date else None,
+                        "status": trek.status if trek else None,
+                        "assigned_staff_name": trek.assigned_staff.full_name if trek and trek.assigned_staff else None,
+                    },
+                }
+            )
+
+        return {"success": True, "data": serialized_history}, 200
 
     def get_trek_by_id(self, trek_id):
         trek = Trek.query.get(trek_id)
