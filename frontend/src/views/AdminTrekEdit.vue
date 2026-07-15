@@ -60,7 +60,15 @@
 
               <div class="col-md-6">
                 <label class="form-label">Duration (days)</label>
-                <input v-model.number="form.duration_days" type="number" min="1" class="form-control" :class="{ 'is-invalid': validationErrors.duration_days }" required />
+                <input
+                  v-model.number="form.duration_days"
+                  type="number"
+                  min="1"
+                  class="form-control"
+                  :class="{ 'is-invalid': validationErrors.duration_days }"
+                  required
+                  @input="onDurationInput"
+                />
                 <div class="invalid-feedback">{{ validationErrors.duration_days }}</div>
               </div>
 
@@ -83,13 +91,28 @@
 
               <div class="col-md-6">
                 <label class="form-label">Start Date</label>
-                <input v-model="form.start_date" type="date" class="form-control" :class="{ 'is-invalid': validationErrors.start_date }" required />
+                <input
+                  v-model="form.start_date"
+                  type="date"
+                  class="form-control"
+                  :class="{ 'is-invalid': validationErrors.start_date }"
+                  required
+                  @input="onStartDateInput"
+                />
                 <div class="invalid-feedback">{{ validationErrors.start_date }}</div>
+                <div class="form-text">Duration and end date auto-fill each other.</div>
               </div>
 
               <div class="col-md-6">
                 <label class="form-label">End Date</label>
-                <input v-model="form.end_date" type="date" class="form-control" :class="{ 'is-invalid': validationErrors.end_date }" required />
+                <input
+                  v-model="form.end_date"
+                  type="date"
+                  class="form-control"
+                  :class="{ 'is-invalid': validationErrors.end_date }"
+                  required
+                  @input="onEndDateInput"
+                />
                 <div class="invalid-feedback">{{ validationErrors.end_date }}</div>
               </div>
             </div>
@@ -140,6 +163,47 @@ export default {
     this.fetchTrek()
   },
   methods: {
+    recalcEndDateFromDuration() {
+      if (!this.form.start_date || !this.form.duration_days || Number(this.form.duration_days) <= 0) {
+        return
+      }
+
+      const start = new Date(this.form.start_date)
+      if (Number.isNaN(start.getTime())) {
+        return
+      }
+
+      const end = new Date(start)
+      end.setDate(end.getDate() + (Number(this.form.duration_days) - 1))
+      this.form.end_date = end.toISOString().slice(0, 10)
+    },
+    recalcDurationFromDates() {
+      if (!this.form.start_date || !this.form.end_date) {
+        return
+      }
+
+      const start = new Date(this.form.start_date)
+      const end = new Date(this.form.end_date)
+      if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime()) || end < start) {
+        return
+      }
+
+      const diffDays = Math.round((end - start) / (1000 * 60 * 60 * 24)) + 1
+      this.form.duration_days = diffDays
+    },
+    onDurationInput() {
+      this.recalcEndDateFromDuration()
+    },
+    onStartDateInput() {
+      if (this.form.duration_days) {
+        this.recalcEndDateFromDuration()
+      } else if (this.form.end_date) {
+        this.recalcDurationFromDates()
+      }
+    },
+    onEndDateInput() {
+      this.recalcDurationFromDates()
+    },
     async fetchTrek() {
       this.loading = true
       this.serverError = ''

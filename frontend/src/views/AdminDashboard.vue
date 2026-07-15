@@ -12,30 +12,6 @@
             <i class="bi bi-shield-lock me-1"></i>
             Admin
           </span>
-          <router-link class="btn btn-outline-primary btn-sm" :to="{ name: 'AdminTrekIndex' }">
-            <i class="bi bi-map me-1"></i>
-            Manage Treks
-          </router-link>
-          <router-link class="btn btn-outline-primary btn-sm" :to="{ name: 'AdminTrekCreate' }">
-            <i class="bi bi-plus-square me-1"></i>
-            Create Trek
-          </router-link>
-          <router-link class="btn btn-outline-primary btn-sm" :to="{ name: 'AdminBookingHistory' }">
-            <i class="bi bi-clock-history me-1"></i>
-            Booking History
-          </router-link>
-          <router-link class="btn btn-outline-primary btn-sm" :to="{ name: 'AdminStaffManagement' }">
-            <i class="bi bi-people me-1"></i>
-            Manage Staff
-          </router-link>
-          <router-link class="btn btn-outline-primary btn-sm" :to="{ name: 'AdminUsersSummary' }">
-            <i class="bi bi-person-lines-fill me-1"></i>
-            Users
-          </router-link>
-          <button class="btn btn-outline-secondary btn-sm" @click="logout">
-            <i class="bi bi-box-arrow-right me-1"></i>
-            Logout
-          </button>
         </div>
       </div>
 
@@ -128,10 +104,6 @@ export default {
       } finally {
         this.loading = false
       }
-    },
-    logout() {
-      authService.logout()
-      this.$router.push({ name: 'Login' })
     },
   },
 }

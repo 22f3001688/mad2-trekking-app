@@ -76,7 +76,6 @@ export default {
           ? [
               { label: 'Dashboard', routeName: 'StaffDashboard', icon: 'bi bi-speedometer2' },
               { label: 'Assigned Treks', routeName: 'StaffMyTreks', icon: 'bi bi-map', matchNames: ['StaffMyTreks', 'StaffTrekParticipants'] },
-              { label: 'Participants', routeName: 'StaffMyTreks', icon: 'bi bi-people' },
               { label: 'Logout', action: 'logout', icon: 'bi bi-box-arrow-right', variant: 'danger' },
             ]
           : role === 'trekker'

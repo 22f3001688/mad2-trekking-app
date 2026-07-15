@@ -64,11 +64,6 @@
                   </select>
                 </div>
 
-                <div class="form-check form-switch mb-4">
-                  <input v-model="form.is_active" class="form-check-input" type="checkbox" />
-                  <label class="form-check-label">Active account</label>
-                </div>
-
                 <div class="d-flex gap-2">
                   <button class="btn btn-primary" :disabled="submitting">
                     <span v-if="submitting" class="spinner-border spinner-border-sm me-2" role="status"></span>
