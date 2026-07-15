@@ -64,7 +64,8 @@
                   <tr v-for="booking in bookings" :key="booking.booking_id">
                     <td class="fw-semibold">{{ booking.trek_name }}</td>
                     <td>{{ booking.location }}</td>
-                    <td>{{ formatDates(booking.start_date, booking.end_date) }}</td>
+                    <td>{{ formatDate(booking.start_date) }}</td>
+                    <td>{{ formatDate(booking.end_date) }}</td>
                     <td>{{ formatDateTime(booking.booking_date) }}</td>
                     <td>
                       <span class="badge text-capitalize" :class="bookingBadgeClass(booking.booking_status)">
@@ -200,9 +201,6 @@ export default {
         hour: '2-digit',
         minute: '2-digit',
       })
-    },
-    formatDates(startDate, endDate) {
-      return `${this.formatDate(startDate)} - ${this.formatDate(endDate)}`
     },
     bookingBadgeClass(status) {
       switch (status) {

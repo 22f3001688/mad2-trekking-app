@@ -30,8 +30,8 @@
                 <h2 class="h5 mb-3">Booking Information</h2>
                 <div class="detail-item"><span>Booking ID</span><strong>{{ booking.booking.id }}</strong></div>
                 <div class="detail-item"><span>Booking Date</span><strong>{{ formatDateTime(booking.booking.booking_date) }}</strong></div>
-                <div class="detail-item"><span>Status</span><strong class="text-capitalize">{{ booking.booking.status }}</strong></div>
-                <div class="detail-item"><span>Payment Status</span><strong class="text-capitalize">{{ booking.booking.payment_status }}</strong></div>
+                <div class="detail-item"><span>Status</span><strong><span class="badge text-capitalize" :class="bookingBadgeClass(booking.booking.status)">{{ booking.booking.status }}</span></strong></div>
+                <div class="detail-item"><span>Payment Status</span><strong><span class="badge text-capitalize" :class="paymentBadgeClass(booking.booking.payment_status)">{{ booking.booking.payment_status }}</span></strong></div>
               </div>
             </div>
           </div>
@@ -41,11 +41,11 @@
                 <h2 class="h5 mb-3">Trek Information</h2>
                 <div class="detail-item"><span>Trek Name</span><strong>{{ booking.trek.trek_name }}</strong></div>
                 <div class="detail-item"><span>Location</span><strong>{{ booking.trek.location }}</strong></div>
-                <div class="detail-item"><span>Difficulty</span><strong class="text-capitalize">{{ booking.trek.difficulty }}</strong></div>
+                <div class="detail-item"><span>Difficulty</span><strong><span class="badge text-capitalize" :class="difficultyBadgeClass(booking.trek.difficulty)">{{ booking.trek.difficulty }}</span></strong></div>
                 <div class="detail-item"><span>Duration</span><strong>{{ booking.trek.duration_days }} days</strong></div>
                 <div class="detail-item"><span>Start Date</span><strong>{{ formatDate(booking.trek.start_date) }}</strong></div>
                 <div class="detail-item"><span>End Date</span><strong>{{ formatDate(booking.trek.end_date) }}</strong></div>
-                <div class="detail-item"><span>Trek Status</span><strong class="text-capitalize">{{ booking.trek.status }}</strong></div>
+                <div class="detail-item"><span>Trek Status</span><strong><span class="badge text-capitalize" :class="trekBadgeClass(booking.trek.status)">{{ booking.trek.status }}</span></strong></div>
               </div>
             </div>
           </div>
@@ -117,6 +117,54 @@ export default {
       const date = new Date(value)
       if (Number.isNaN(date.getTime())) return value
       return date.toLocaleString(undefined, { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
+    },
+    bookingBadgeClass(status) {
+      switch ((status || '').toLowerCase()) {
+        case 'booked':
+          return 'bg-success-subtle text-success-emphasis'
+        case 'completed':
+          return 'bg-dark-subtle text-dark-emphasis'
+        case 'cancelled':
+          return 'bg-secondary-subtle text-secondary-emphasis'
+        default:
+          return 'bg-warning-subtle text-warning-emphasis'
+      }
+    },
+    paymentBadgeClass(status) {
+      switch ((status || '').toLowerCase()) {
+        case 'paid':
+          return 'bg-success-subtle text-success-emphasis'
+        case 'refunded':
+          return 'bg-info-subtle text-info-emphasis'
+        case 'failed':
+          return 'bg-danger-subtle text-danger-emphasis'
+        default:
+          return 'bg-warning-subtle text-warning-emphasis'
+      }
+    },
+    difficultyBadgeClass(level) {
+      switch ((level || '').toLowerCase()) {
+        case 'easy':
+          return 'bg-success-subtle text-success-emphasis'
+        case 'moderate':
+          return 'bg-warning-subtle text-warning-emphasis'
+        case 'hard':
+          return 'bg-danger-subtle text-danger-emphasis'
+        default:
+          return 'bg-light text-dark'
+      }
+    },
+    trekBadgeClass(status) {
+      switch ((status || '').toLowerCase()) {
+        case 'open':
+          return 'bg-success-subtle text-success-emphasis'
+        case 'closed':
+          return 'bg-secondary-subtle text-secondary-emphasis'
+        case 'completed':
+          return 'bg-dark-subtle text-dark-emphasis'
+        default:
+          return 'bg-warning-subtle text-warning-emphasis'
+      }
     },
   },
 }

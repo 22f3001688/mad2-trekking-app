@@ -56,6 +56,50 @@ class AdminService:
         staff_users = User.query.filter_by(role=Roles.STAFF).order_by(User.created_at.desc()).all()
         return {"success": True, "data": [self._serialize_staff(user) for user in staff_users]}
 
+    def _serialize_user_summary(self, user):
+        return {
+            "id": user.id,
+            "full_name": user.full_name,
+            "email": user.email,
+            "phone": user.phone,
+            "role": user.role,
+            "is_active": user.is_active,
+            "is_blacklisted": user.is_blacklisted,
+            "created_at": user.created_at.isoformat() if user.created_at else None,
+        }
+
+    def get_all_users_summary(self, filters=None):
+        filters = filters or {}
+        search_term = (filters.get("search") or "").strip()
+        role = (filters.get("role") or "").strip().lower()
+        status = (filters.get("status") or "").strip().lower()
+
+        query = User.query
+
+        if search_term:
+            query = query.filter(
+                (User.full_name.ilike(f"%{search_term}%"))
+                | (User.email.ilike(f"%{search_term}%"))
+                | (User.phone.ilike(f"%{search_term}%"))
+            )
+
+        if role in {Roles.ADMIN, Roles.STAFF, Roles.TREKKER}:
+            query = query.filter(User.role == role)
+
+        if status == "active":
+            query = query.filter(User.is_active.is_(True))
+        elif status == "inactive":
+            query = query.filter(User.is_active.is_(False))
+        elif status == "blacklisted":
+            query = query.filter(User.is_blacklisted.is_(True))
+
+        users = query.order_by(User.created_at.desc(), User.id.desc()).all()
+
+        return {
+            "success": True,
+            "data": [self._serialize_user_summary(user) for user in users],
+        }
+
     def get_available_staff(self):
         staff_users = (
             User.query.filter_by(role=Roles.STAFF, is_active=True, is_blacklisted=False)

@@ -1,0 +1,92 @@
+:root {
+  --trekscape-card-radius: 0.9rem;
+  --trekscape-radius-lg: 1.2rem;
+  --trekscape-shadow-sm: 0 0.35rem 1rem rgba(15, 23, 42, 0.08);
+  --trekscape-shadow-md: 0 0.85rem 1.8rem rgba(15, 23, 42, 0.08);
+  --trekscape-border: #e6ebf2;
+  --trekscape-bg-soft: #f5f8fc;
+  --trekscape-text-soft: #5a6b7d;
+}
+
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: "Segoe UI", "Noto Sans", "Helvetica Neue", Arial, sans-serif;
+  background:
+    linear-gradient(180deg, rgba(247, 249, 252, 0.94) 0%, rgba(255, 255, 255, 0.96) 100%),
+    radial-gradient(1200px 420px at 0% 0%, #eef5ff 0%, rgba(238, 245, 255, 0) 60%),
+    url("/trek.webp") no-repeat right -160px top -70px / 680px auto,
+    linear-gradient(180deg, #f7f9fc 0%, #ffffff 100%);
+  color: #1f2a37;
+}
+
+.card {
+  border-radius: var(--trekscape-card-radius);
+  border: 1px solid var(--trekscape-border);
+  background-color: #ffffff;
+}
+
+.card.shadow-sm {
+  box-shadow: var(--trekscape-shadow-sm) !important;
+}
+
+.card:hover {
+  box-shadow: var(--trekscape-shadow-md) !important;
+}
+
+.table > thead {
+  vertical-align: middle;
+}
+
+.table > thead th {
+  white-space: nowrap;
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--bs-secondary-color);
+  border-bottom-color: var(--trekscape-border);
+}
+
+.table > tbody td {
+  vertical-align: middle;
+  border-color: #eef2f7;
+}
+
+.btn {
+  border-radius: 0.72rem;
+  font-weight: 500;
+}
+
+.badge {
+  font-weight: 600;
+}
+
+.form-label {
+  font-weight: 600;
+}
+
+.form-control,
+.form-select {
+  border-radius: 0.72rem;
+  border-color: var(--trekscape-border);
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: #7fb0ff;
+  box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.12);
+}
+
+.alert {
+  border-radius: 0.8rem;
+}
+
+/* Keep icon glyph rendering stable across browsers/builds */
+.bi::before {
+  font-family: bootstrap-icons !important;
+  font-style: normal;
+  font-weight: normal !important;
+}

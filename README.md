@@ -65,7 +65,7 @@ python -m backend.app
 Open a second terminal from the repository root:
 
 ```bash
-celery -A backend.celery_worker:celery worker --pool=solo --loglevel=info
+python -m celery -A backend.celery_worker:celery worker --pool=solo --loglevel=info
 ```
 
 ## Start Celery Beat
@@ -73,7 +73,7 @@ celery -A backend.celery_worker:celery worker --pool=solo --loglevel=info
 Open a third terminal from the repository root:
 
 ```bash
-celery -A backend.celery_worker:celery beat --loglevel=info
+python -m celery -A backend.celery_worker:celery beat --loglevel=info
 ```
 
 ## Start the Frontend

@@ -11,6 +11,9 @@ class AdminController:
     def get_staff(self):
         return self.admin_service.get_all_staff()
 
+    def get_users(self, filters=None):
+        return self.admin_service.get_all_users_summary(filters)
+
     def create_staff(self, payload):
         return self.admin_service.create_staff(payload)
 

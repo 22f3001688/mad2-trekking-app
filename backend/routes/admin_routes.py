@@ -21,6 +21,18 @@ def get_staff():
     return jsonify(response), 200
 
 
+@admin_bp.route("/users", methods=["GET"])
+@admin_required
+def get_users():
+    filters = {
+        "search": request.args.get("search", ""),
+        "role": request.args.get("role", ""),
+        "status": request.args.get("status", ""),
+    }
+    response = admin_controller.get_users(filters)
+    return jsonify(response), 200
+
+
 @admin_bp.route("/staff", methods=["POST"])
 @admin_required
 def create_staff():

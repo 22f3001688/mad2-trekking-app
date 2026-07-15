@@ -87,15 +87,20 @@
                   <td>{{ trek.end_date }}</td>
                   <td class="text-end">
                     <div class="btn-group btn-group-sm" role="group">
-                      <router-link class="btn btn-outline-secondary" :to="{ name: 'AdminTrekView' }">
+                      <button class="btn btn-outline-secondary" type="button" @click="openViewModal(trek)">
                         View
-                      </router-link>
+                      </button>
                       <router-link class="btn btn-outline-primary" :to="{ name: 'AdminTrekEdit', params: { id: trek.id } }">
                         Edit
                       </router-link>
-                      <router-link class="btn btn-outline-danger" :to="{ name: 'AdminTrekDelete' }">
+                      <button
+                        class="btn btn-outline-danger"
+                        type="button"
+                        disabled
+                        title="Delete trek is not available in this release"
+                      >
                         Delete
-                      </router-link>
+                      </button>
                       <button class="btn btn-outline-info" type="button" @click="openAssignModal(trek)">
                         Assign Staff
                       </button>
@@ -108,6 +113,40 @@
         </div>
       </div>
     </div>
+
+    <div v-if="showViewModal && activeViewTrek" class="modal fade show d-block" tabindex="-1" role="dialog" aria-modal="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Trek Details</h5>
+            <button type="button" class="btn-close" @click="closeViewModal"></button>
+          </div>
+          <div class="modal-body">
+            <div class="row g-3">
+              <div class="col-12 col-md-6"><div class="detail-item"><span>Name</span><strong>{{ activeViewTrek.trek_name }}</strong></div></div>
+              <div class="col-12 col-md-6"><div class="detail-item"><span>Location</span><strong>{{ activeViewTrek.location }}</strong></div></div>
+              <div class="col-12 col-md-6"><div class="detail-item"><span>Difficulty</span><strong class="text-capitalize">{{ activeViewTrek.difficulty }}</strong></div></div>
+              <div class="col-12 col-md-6"><div class="detail-item"><span>Status</span><strong class="text-capitalize">{{ activeViewTrek.status }}</strong></div></div>
+              <div class="col-12 col-md-6"><div class="detail-item"><span>Duration</span><strong>{{ activeViewTrek.duration_days }} days</strong></div></div>
+              <div class="col-12 col-md-6"><div class="detail-item"><span>Slots</span><strong>{{ activeViewTrek.available_slots }}/{{ activeViewTrek.total_slots }}</strong></div></div>
+              <div class="col-12 col-md-6"><div class="detail-item"><span>Start Date</span><strong>{{ activeViewTrek.start_date || '—' }}</strong></div></div>
+              <div class="col-12 col-md-6"><div class="detail-item"><span>End Date</span><strong>{{ activeViewTrek.end_date || '—' }}</strong></div></div>
+              <div class="col-12"><div class="detail-item"><span>Assigned Staff</span><strong>{{ activeViewTrek.assigned_staff_name || '—' }}</strong></div></div>
+              <div class="col-12">
+                <div class="border rounded-3 p-3 bg-body-tertiary">
+                  <p class="small text-muted mb-1">Description</p>
+                  <p class="mb-0">{{ activeViewTrek.description || 'No description available.' }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline-secondary" @click="closeViewModal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div v-if="showViewModal" class="modal-backdrop fade show"></div>
 
     <div v-if="showAssignModal" class="modal fade show d-block" tabindex="-1" role="dialog" aria-modal="true">
       <div class="modal-dialog modal-dialog-centered">
@@ -168,12 +207,14 @@ export default {
         status: '',
       },
       showAssignModal: false,
+      showViewModal: false,
       assignLoading: false,
       assignError: '',
       assignSuccess: '',
       availableStaff: [],
       selectedStaffId: null,
       activeTrek: null,
+      activeViewTrek: null,
     }
   },
   mounted() {
@@ -219,6 +260,14 @@ export default {
       } finally {
         this.assignLoading = false
       }
+    },
+    openViewModal(trek) {
+      this.activeViewTrek = trek
+      this.showViewModal = true
+    },
+    closeViewModal() {
+      this.showViewModal = false
+      this.activeViewTrek = null
     },
     closeAssignModal() {
       this.showAssignModal = false
@@ -271,5 +320,19 @@ export default {
 <style scoped>
 .trek-list-page {
   width: 100%;
+}
+
+.detail-item {
+  border: 1px solid var(--bs-border-color-translucent);
+  border-radius: 0.75rem;
+  padding: 0.75rem;
+  background: var(--bs-tertiary-bg);
+}
+
+.detail-item span {
+  display: block;
+  color: var(--bs-secondary-color);
+  font-size: 0.8rem;
+  margin-bottom: 0.2rem;
 }
 </style>
